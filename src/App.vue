@@ -1,10 +1,22 @@
 <template>
-  <div>
-    <router-link to="/">
-      Home
-    </router-link> | <router-link to="/medium">
-      Medium
-    </router-link>
+  <Component :is="layout">
     <router-view />
-  </div>
+  </Component>
 </template>
+
+<script>
+const default_layout = 'default';
+
+export default {
+    name: 'App',
+    computed: {
+        layout () {
+            return (default_layout) + '-layout';
+        }
+    }
+};
+</script>
+
+<style scoped>
+
+</style>

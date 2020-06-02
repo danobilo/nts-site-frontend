@@ -3,8 +3,10 @@
 const VueLoaderPlugin      = require('vue-loader/lib/plugin');
 const HtmlPlugin           = require('html-webpack-plugin');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin           = require('copy-webpack-plugin');
 const helpers              = require('./helpers');
 const isDev                = process.env.NODE_ENV === 'development';
+// Import the path module 
 
 const webpackConfig = {
     entry: {
@@ -52,12 +54,33 @@ const webpackConfig = {
                     { loader: 'css-loader', options: { sourceMap: isDev } },
                     { loader: 'sass-loader', options: { sourceMap: isDev } }
                 ]
-            }
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                include: [ helpers.root('src') ],
+                loader: 'file-loader',
+                query: {
+                    name: 'img/[name].[ext]'
+                }
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/,
+                use: [
+                    'file-loader',
+                ],
+            },
         ]
     },
     plugins: [
         new VueLoaderPlugin(),
-        new HtmlPlugin({ template: 'index.html', chunksSortMode: 'dependency' })
+        new HtmlPlugin({ template: 'index.html', chunksSortMode: 'dependency' }),
+        new CopyPlugin([
+            { from: 'src/img' , to: 'img' },
+            { from: 'src/js' , to: 'js' },
+            { from: 'src/fonts' , to: 'fonts' },
+            { from: 'src/customizer' , to: 'customizer' },
+            { from: 'src/css' , to: 'css' },
+        ]),
     ]
 };
 
